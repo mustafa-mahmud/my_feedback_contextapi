@@ -1,7 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Header } from './components';
 import { Home, About } from './pages';
-import { useFeedbackContextAPI } from './context/ContextAPI.js';
 
 const App = () => {
   //////////////////////////////////////////////////////////////

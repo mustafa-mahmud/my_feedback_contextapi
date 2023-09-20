@@ -3,7 +3,6 @@ import { useFeedbackContextAPI } from '../context/ContextAPI.js';
 
 const Home = () => {
   const { feedback } = useFeedbackContextAPI();
-  console.log(feedback);
   ////////////////////////////////////////////////
   return (
     <div className="container">

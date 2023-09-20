@@ -29,8 +29,6 @@ const FormElements = () => {
   };
 
   const verification = (newFB) => {
-    console.log(editId);
-
     if (newFB.trim().length < 10) {
       setMsg('Text must be al lest 10 Characters...');
       setIsDisabled(true);
