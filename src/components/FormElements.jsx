@@ -14,6 +14,7 @@ const FormElements = () => {
     editId,
     feedback,
     editFeedback,
+    fetchFeedback,
   } = useFeedbackContextAPI();
 
   const handleChangeRating = (e) => {
@@ -51,7 +52,6 @@ const FormElements = () => {
       editFeedback(editId, newFB);
     } else {
       const newFB = {
-        id: reviews + 1,
         text,
         rating: Number(rating),
       };
@@ -74,6 +74,10 @@ const FormElements = () => {
       setRating(item.rating);
     }
   }, [editId]);
+
+  useEffect(() => {
+    fetchFeedback();
+  }, []);
 
   ///////////////////////////////////////////////////////////////////
   return (

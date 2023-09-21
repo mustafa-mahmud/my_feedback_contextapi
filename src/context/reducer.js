@@ -4,6 +4,9 @@ import {
   ADD_FEEDBACK,
   EDIT_FEEDBACK_ID,
   EDIT_FEEDBACK,
+  FETCH_FEEDBACK_BEGIN,
+  FETCH_FEEDBACK_SUCCESS,
+  FETCH_FEEDBACK_ERROR,
 } from './action';
 
 const reducer = (state, action) => {
@@ -58,6 +61,29 @@ const reducer = (state, action) => {
       ...state,
       feedback: newFeedback,
       editId: null,
+    };
+  }
+
+  if (action.type === FETCH_FEEDBACK_BEGIN) {
+    return {
+      ...state,
+      isLoading: true,
+    };
+  }
+
+  if (action.type === FETCH_FEEDBACK_SUCCESS) {
+    return {
+      ...state,
+      feedback: action.payload.data,
+      isLoading: false,
+    };
+  }
+
+  if (action.type === FETCH_FEEDBACK_ERROR) {
+    return {
+      ...state,
+      errMsg: action.payload.msg,
+      isLoading: false,
     };
   }
 

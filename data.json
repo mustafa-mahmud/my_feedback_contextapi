@@ -1,0 +1,19 @@
+{
+  "feedback": [
+    {
+      "id": 1,
+      "text": "Some Text for feedback 01 edited",
+      "rating": 6
+    },
+    {
+      "text": "Some Text for feedback 01 new",
+      "rating": 3,
+      "id": 4
+    },
+    {
+      "text": "edited edited edited edited",
+      "rating": 10,
+      "id": 5
+    }
+  ]
+}

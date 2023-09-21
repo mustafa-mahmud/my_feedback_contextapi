@@ -1,5 +1,4 @@
 import { createContext, useContext, useReducer } from 'react';
-import feedbackData from '../feedbackData';
 import reducer from './reducer';
 
 import {
@@ -8,16 +7,22 @@ import {
   ADD_FEEDBACK,
   EDIT_FEEDBACK_ID,
   EDIT_FEEDBACK,
+  FETCH_FEEDBACK_BEGIN,
+  FETCH_FEEDBACK_SUCCESS,
+  FETCH_FEEDBACK_ERROR,
 } from './action';
 
 const FeedbackContextAPI = createContext();
 
 const initialState = {
-  feedback: feedbackData,
+  feedback: [],
   reviews: 0,
   average: 0,
   editId: null,
+  isLoading: false,
+  errMsg: '',
 };
+
 const FeedbackContextAPIProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
@@ -25,20 +30,68 @@ const FeedbackContextAPIProvider = ({ children }) => {
     dispatch({ type: CALC_REVIEWS_AVERAGE });
   };
 
-  const removeFeedback = (id) => {
-    dispatch({ type: REMOVE_REVIEWS, payload: { id } });
+  const removeFeedback = async (id) => {
+    try {
+      await fetch(`/feedback/${id}`, {
+        method: 'DELETE',
+      });
+
+      dispatch({ type: REMOVE_REVIEWS, payload: { id } });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
-  const addFeedback = (newFB) => {
-    dispatch({ type: ADD_FEEDBACK, payload: { newFB } });
+  const addFeedback = async (newFB) => {
+    try {
+      const res = await fetch('/feedback', {
+        method: 'POST',
+        body: JSON.stringify(newFB),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      const data = await res.json();
+      dispatch({ type: ADD_FEEDBACK, payload: { newFB: data } });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const editFeedbackId = (id) => {
     dispatch({ type: EDIT_FEEDBACK_ID, payload: { id } });
   };
 
-  const editFeedback = (id, newFB) => {
-    dispatch({ type: EDIT_FEEDBACK, payload: { id, newFB } });
+  const editFeedback = async (id, newFB) => {
+    try {
+      const res = await fetch(`/feedback/${id}`, {
+        method: 'PATCH',
+        body: JSON.stringify(newFB),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      const data = await res.json();
+      dispatch({ type: EDIT_FEEDBACK, payload: { id, newFB: data } });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const fetchFeedback = async () => {
+    dispatch({ type: FETCH_FEEDBACK_BEGIN });
+
+    try {
+      const res = await fetch('/feedback');
+      const data = await res.json();
+
+      dispatch({ type: FETCH_FEEDBACK_SUCCESS, payload: { data } });
+    } catch (error) {
+      console.log(error);
+      dispatch({ type: FETCH_FEEDBACK_ERROR, payload: { msg: error } });
+    }
   };
 
   //////////////////////////////////////////////////////////////////
@@ -51,6 +104,7 @@ const FeedbackContextAPIProvider = ({ children }) => {
         addFeedback,
         editFeedbackId,
         editFeedback,
+        fetchFeedback,
       }}
     >
       {children}
